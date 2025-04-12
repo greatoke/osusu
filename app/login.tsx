@@ -7,19 +7,18 @@ import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-export default function SignupScreen() {
+export default function LoginScreen() {
   const colorScheme = useColorScheme();
   const tintColor = Colors[colorScheme ?? 'light'].tint;
   const router = useRouter();
   
-  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSignup = () => {
-    // Here you would implement actual signup logic
+  const handleLogin = () => {
+    // Here you would implement actual login logic
     // For now, just navigate to the main app
-    router.replace('/(tabs)');
+    router.replace('/(app)');
   };
 
   return (
@@ -38,22 +37,14 @@ export default function SignupScreen() {
           
           <View style={styles.headerContainer}>
             <ThemedText type="title" style={styles.title}>
-              Create an account
+              Login
             </ThemedText>
             <ThemedText style={styles.subtitle}>
-              Invest and double your income now
+              Welcome back to your financial journey
             </ThemedText>
           </View>
           
           <View style={styles.formContainer}>
-            <TextInput
-              style={[styles.input, { borderColor: colorScheme === 'dark' ? '#444' : '#ddd' }]}
-              placeholder="Full name"
-              placeholderTextColor={colorScheme === 'dark' ? '#888' : '#999'}
-              value={fullName}
-              onChangeText={setFullName}
-            />
-            
             <TextInput
               style={[styles.input, { borderColor: colorScheme === 'dark' ? '#444' : '#ddd' }]}
               placeholder="Email address"
@@ -76,18 +67,26 @@ export default function SignupScreen() {
             <TouchableOpacity 
               style={[styles.button, { backgroundColor: tintColor }]}
               activeOpacity={0.8}
-              onPress={handleSignup}
+              onPress={handleLogin}
             >
               <ThemedText style={styles.buttonText} lightColor="#fff" darkColor="#fff">
-                Create account
+                Login
               </ThemedText>
             </TouchableOpacity>
             
-            <View style={styles.loginLinkContainer}>
-              <Link href="/(auth)/login" asChild>
+            <View style={styles.forgotPasswordContainer}>
+              <TouchableOpacity>
+                <ThemedText style={[styles.forgotPasswordText, { color: tintColor }]}>
+                  Forgot password?
+                </ThemedText>
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.signupLinkContainer}>
+              <Link href="/(auth)/signup" asChild>
                 <TouchableOpacity>
-                  <ThemedText style={[styles.loginText, { color: tintColor }]}>
-                    Already have an account?
+                  <ThemedText style={[styles.signupText, { color: tintColor }]}>
+                    Don't have an account? Sign up
                   </ThemedText>
                 </TouchableOpacity>
               </Link>
@@ -149,11 +148,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
-  loginLinkContainer: {
+  forgotPasswordContainer: {
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  forgotPasswordText: {
+    fontSize: 14,
+  },
+  signupLinkContainer: {
     alignItems: 'center',
     marginTop: 8,
   },
-  loginText: {
+  signupText: {
     fontSize: 16,
     fontWeight: '600',
   },
