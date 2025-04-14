@@ -5,18 +5,22 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ContactInfoModal } from '@/components/ContactInfoModal';
 import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { BackButton } from '@/components/ui/button';
 
 export default function ProfileScreen() {
   const primaryColor = useThemeColor({}, 'tint');
   const [contactModalVisible, setContactModalVisible] = useState(false);
+  const { signOut } = useAuth();
   
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={{flex: 1}}>
+      <ScrollView style={styles.container}>
       {/* Header with back button */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
-          <IconSymbol name="chevron.left.forwardslash.chevron.right" size={24} color="#000" />
-        </TouchableOpacity>
+        <BackButton onPress={()=>router.back()}/>
         <ThemedText type="subtitle" style={styles.headerTitle}>Profile</ThemedText>
         <View style={styles.placeholder} />
       </View>
@@ -90,8 +94,29 @@ export default function ProfileScreen() {
             <IconSymbol name="chevron.right" size={20} color="#666" />
           </ThemedView>
         </TouchableOpacity>
+        
+        <TouchableOpacity onPress={()=>router.push("/(modals)/help-support")}>
+          <ThemedView style={styles.menuItem}>
+            <View style={styles.menuIconContainer}>
+              <IconSymbol name="chevron.right" size={20} color="#000" />
+            </View>
+            <ThemedText style={styles.menuText}>Help & Support</ThemedText>
+            <IconSymbol name="chevron.right" size={20} color="#666" />
+          </ThemedView>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => signOut()}>
+          <ThemedView style={styles.menuItem}>
+            <View style={styles.menuIconContainer}>
+              <IconSymbol name="power" size={20} color="#000" />
+            </View>
+            <ThemedText style={styles.menuText}>Logout</ThemedText>
+            <IconSymbol name="chevron.right" size={20} color="#666" />
+          </ThemedView>
+        </TouchableOpacity>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -104,7 +129,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 40,
     paddingBottom: 20,
   },
   backButton: {

@@ -4,6 +4,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
+import 'react-native-get-random-values';
 
 import AppProvider from "@/components/app-provider";
 
@@ -25,6 +26,7 @@ export default function RootLayout() {
     return null;
   }
 
+
   return (
     <AppProvider>
       <Stack initialRouteName="index">
@@ -33,6 +35,7 @@ export default function RootLayout() {
         <Stack.Screen name="login" options={{ headerShown: false }} />
 
         <Stack.Screen name="(app)" options={{ headerShown: false }} />
+        <Stack.Screen name="(modals)" options={{ headerShown: false }} />
         {/* <Stack.Screen name="(auth)" options={{ headerShown: false }} /> */}
         <Stack.Screen name="+not-found" />
       </Stack>

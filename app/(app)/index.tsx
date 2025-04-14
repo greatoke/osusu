@@ -1,99 +1,155 @@
 import { StyleSheet, TouchableOpacity, View, Image, ScrollView } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { ThemedButton } from '@/components/ThemedButton';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useAuth } from '@/hooks/useAuth';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Colors } from '@/constants/Colors';
+import { router } from 'expo-router';
 
 export default function HomeScreen() {
   const primaryColor = useThemeColor({}, 'tint');
-  
+  const { user } = useAuth();
+
   return (
+    <SafeAreaView style={{flex: 1}}>
     <ScrollView style={styles.container}>
-      {/* Header with notification icon */}
+      {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.menuButton}>
-          <View style={styles.menuIcon}>
-            <View style={styles.menuLine} />
-            <View style={styles.menuLine} />
-            <View style={styles.menuLine} />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.notificationButton}>
-          <IconSymbol name="chevron.right" size={24} color="#000" />
-        </TouchableOpacity>
-      </View>
-
-      {/* Welcome message */}
-      <ThemedText type="title" style={styles.welcomeText}>Welcome, Jessie.</ThemedText>
-
-      {/* Asset Portfolio Card */}
-      <ThemedView style={[styles.assetCard, { backgroundColor: '#3AAA75' }]}>
-        <ThemedText style={styles.assetLabel}>Your total asset portfolio</ThemedText>
-        <ThemedText style={styles.assetValue}>N203,935</ThemedText>
-        <TouchableOpacity style={styles.investButton}>
-          <ThemedText style={styles.investButtonText}>Invest now</ThemedText>
-        </TouchableOpacity>
-      </ThemedView>
-
-      {/* Best Plans Section */}
-      <View style={styles.sectionHeader}>
-        <ThemedText type="subtitle">Best Plans</ThemedText>
-        <TouchableOpacity>
-          <ThemedText style={styles.seeAllText}>See All →</ThemedText>
+        <View>
+          <ThemedText type="title" style={styles.welcomeText}>Welcome, {user?.name || 'User'}</ThemedText>
+          <ThemedText style={styles.subtitle}>Your financial journey starts here</ThemedText>
+        </View>
+        <TouchableOpacity 
+          style={styles.notificationButton}
+          onPress={() => router.push('/(modals)/notifications')}
+        >
+          <IconSymbol name="bell.fill" size={24} color={primaryColor} />
         </TouchableOpacity>
       </View>
 
-      {/* Investment Plans */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.plansScrollView}>
-        <ThemedView style={[styles.planCard, { backgroundColor: '#F2B84B' }]}>
-          <ThemedText style={styles.planTitle}>Gold</ThemedText>
-          <ThemedText style={styles.planReturn}>30% return</ThemedText>
-          <View style={styles.planIconContainer}>
-            <ThemedText style={styles.planIconText}>$</ThemedText>
-          </View>
-        </ThemedView>
-
-        <ThemedView style={[styles.planCard, { backgroundColor: '#C0C0C0' }]}>
-          <ThemedText style={styles.planTitle}>Silver</ThemedText>
-          <ThemedText style={styles.planReturn}>60% return</ThemedText>
-          <View style={styles.planIconContainer}>
-            <ThemedText style={styles.planIconText}>€</ThemedText>
-          </View>
-        </ThemedView>
-
-        <ThemedView style={[styles.planCard, { backgroundColor: '#A67FE8' }]}>
-          <ThemedText style={styles.planTitle}>Platinum</ThemedText>
-          <ThemedText style={styles.planReturn}>90% return</ThemedText>
-          <View style={styles.planIconContainer}>
-            <ThemedText style={styles.planIconText}>£</ThemedText>
-          </View>
-        </ThemedView>
-      </ScrollView>
-
-      {/* Investment Guide Section */}
-      <ThemedText type="subtitle" style={styles.guideTitle}>Investment Guide</ThemedText>
-
-      {/* Guide Items */}
-      <ThemedView style={styles.guideItem}>
-        <View style={styles.guideContent}>
-          <ThemedText type="defaultSemiBold">Basic type of investments</ThemedText>
-          <ThemedText style={styles.guideDescription}>This is how you set your foot for 2020 Stock market recession. What's next...</ThemedText>
+      {/* Wallet / Balance Summary */}
+      <ThemedView style={styles.walletCard}>
+        <View style={styles.walletHeader}>
+          <ThemedText type="subtitle">Wallet Balance</ThemedText>
+          <TouchableOpacity onPress={() => router.push('/(modals)/deposit')}>
+            <ThemedText style={{ color: primaryColor }}>Add Funds</ThemedText>
+          </TouchableOpacity>
         </View>
-        <View style={styles.guideImageContainer}>
-          <View style={styles.guideImage} />
+        <ThemedText type="title" style={styles.balanceAmount}>₦125,000</ThemedText>
+        <View style={styles.walletActions}>
+          <TouchableOpacity style={styles.walletActionButton}>
+            <IconSymbol name="arrow.down" size={16} color={primaryColor} />
+            <ThemedText style={styles.walletActionText}>Withdraw</ThemedText>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.walletActionButton}>
+            <IconSymbol name="arrow.up" size={16} color={primaryColor} />
+            <ThemedText style={styles.walletActionText}>Transfer</ThemedText>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.walletActionButton}>
+            <IconSymbol name="clock" size={16} color={primaryColor} />
+            <ThemedText style={styles.walletActionText}>History</ThemedText>
+          </TouchableOpacity>
         </View>
       </ThemedView>
 
-      <ThemedView style={styles.guideItem}>
-        <View style={styles.guideContent}>
-          <ThemedText type="defaultSemiBold">How much can you start with</ThemedText>
-          <ThemedText style={styles.guideDescription}>What do you like to see? It's a very different market from 2018. The way...</ThemedText>
+      {/* CTA Buttons */}
+      <View style={styles.ctaContainer}>
+        <ThemedButton 
+          variant="default" 
+          style={styles.ctaButton}
+          onPress={() => router.push('/personal-contribution')}
+        >
+          Start Saving
+        </ThemedButton>
+        
+        <ThemedButton 
+          variant="secondary" 
+          style={styles.ctaButton}
+          onPress={() => router.push('/joint-contribution/join')}
+        >
+          Join Group
+        </ThemedButton>
+      </View>
+
+      {/* Personal Contribution Overview */}
+      <ThemedView style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <ThemedText type="subtitle" style={styles.sectionTitle}>Personal Contribution</ThemedText>
+          <TouchableOpacity onPress={() => router.push('/personal-contribution')}>
+            <ThemedText style={{ color: primaryColor }}>View Details</ThemedText>
+          </TouchableOpacity>
         </View>
-        <View style={styles.guideImageContainer}>
-          <View style={styles.guideImage} />
+        
+        <View style={styles.overviewCard}>
+          <View style={styles.overviewRow}>
+            <View>
+              <ThemedText style={styles.overviewLabel}>Daily Amount</ThemedText>
+              <ThemedText type="defaultSemiBold">₦5,000</ThemedText>
+            </View>
+            <View style={{ alignItems: 'flex-end' }}>
+              <ThemedText style={styles.overviewLabel}>Total Saved</ThemedText>
+              <ThemedText type="defaultSemiBold">₦325,000</ThemedText>
+            </View>
+          </View>
+          
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBar}>
+              <View style={[styles.progressFill, { width: '65%', backgroundColor: primaryColor }]} />
+            </View>
+            <View style={styles.progressStats}>
+              <ThemedText style={styles.progressText}>65% of ₦500,000 target</ThemedText>
+            </View>
+          </View>
         </View>
+      </ThemedView>
+
+      {/* Joint Contributions Overview */}
+      <ThemedView style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <ThemedText type="subtitle" style={styles.sectionTitle}>Joint Contributions</ThemedText>
+          <TouchableOpacity onPress={() => router.push('/joint-contribution')}>
+            <ThemedText style={{ color: primaryColor }}>View All</ThemedText>
+          </TouchableOpacity>
+        </View>
+        
+        <TouchableOpacity 
+          style={styles.groupCard}
+          onPress={() => router.push('/joint-contribution/group/1')}
+        >
+          <View style={styles.groupHeader}>
+            <ThemedText type="defaultSemiBold">Family Savings</ThemedText>
+            <View style={styles.membersBadge}>
+              <IconSymbol name="person.2.fill" size={12} color="#666" />
+              <ThemedText style={styles.membersText}>5</ThemedText>
+            </View>
+          </View>
+          
+          <View style={styles.groupDetails}>
+            <View>
+              <ThemedText style={styles.detailLabel}>Total Amount</ThemedText>
+              <ThemedText type="defaultSemiBold">₦250,000</ThemedText>
+            </View>
+            
+            <View style={{ alignItems: 'flex-end' }}>
+              <ThemedText style={styles.detailLabel}>Next Contribution</ThemedText>
+              <ThemedText type="defaultSemiBold">2 days</ThemedText>
+            </View>
+          </View>
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={styles.createGroupButton}
+          onPress={() => router.push('/joint-contribution/create')}
+        >
+          <IconSymbol name="plus" size={16} color={primaryColor} />
+          <ThemedText style={{ color: primaryColor, marginLeft: 8 }}>Create New Group</ThemedText>
+        </TouchableOpacity>
       </ThemedView>
     </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -106,55 +162,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 10,
+    marginBottom: 24,
   },
-  menuButton: {
-    padding: 8,
+  welcomeText: {
+    marginBottom: 4,
   },
-  menuIcon: {
-    width: 24,
-    height: 18,
-    justifyContent: 'space-between',
-  },
-  menuLine: {
-    height: 2,
-    backgroundColor: '#000',
-    borderRadius: 1,
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
   },
   notificationButton: {
     padding: 8,
   },
-  welcomeText: {
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  assetCard: {
-    borderRadius: 16,
-    padding: 20,
+  section: {
     marginBottom: 24,
-  },
-  assetLabel: {
-    color: 'white',
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  assetValue: {
-    color: 'white',
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  investButton: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    alignSelf: 'flex-end',
-  },
-  investButtonText: {
-    color: '#3AAA75',
-    fontWeight: '600',
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -162,68 +183,123 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
-  seeAllText: {
-    color: '#FF6B6B',
+  sectionTitle: {
+    marginBottom: 0,
   },
-  plansScrollView: {
+  walletCard: {
     marginBottom: 24,
-  },
-  planCard: {
-    width: 120,
-    height: 170,
     borderRadius: 16,
-    padding: 16,
-    marginRight: 16,
+    padding: 20,
+  },
+  walletHeader: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  planTitle: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  planReturn: {
-    color: 'white',
-    fontSize: 14,
-  },
-  planIconContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 8,
   },
-  planIconText: {
-    color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  guideTitle: {
+  balanceAmount: {
     marginBottom: 16,
   },
-  guideItem: {
+  walletActions: {
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#EEEEEE',
-    paddingVertical: 16,
+    justifyContent: 'space-between',
   },
-  guideContent: {
+  walletActionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8,
+  },
+  walletActionText: {
+    marginLeft: 4,
+    fontSize: 14,
+  },
+  ctaContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+  },
+  ctaButton: {
     flex: 1,
-    paddingRight: 16,
+    marginHorizontal: 4,
   },
-  guideDescription: {
+  overviewCard: {
+    backgroundColor: '#F9F9F9',
+    borderRadius: 12,
+    padding: 16,
+  },
+  overviewRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  overviewLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 4,
+  },
+  progressContainer: {
     marginTop: 8,
-    color: '#666666',
   },
-  guideImageContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+  progressBar: {
+    height: 8,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 4,
     overflow: 'hidden',
+    marginBottom: 8,
   },
-  guideImage: {
-    width: '100%',
+  progressFill: {
     height: '100%',
-    backgroundColor: '#DDDDDD',
+    borderRadius: 4,
+  },
+  progressStats: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  progressText: {
+    fontSize: 14,
+    color: '#666',
+  },
+  groupCard: {
+    backgroundColor: '#F9F9F9',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+  },
+  groupHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  membersBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#EEEEEE',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  membersText: {
+    fontSize: 12,
+    marginLeft: 4,
+  },
+  groupDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  detailLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 4,
+  },
+  createGroupButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: '#DDDDDD',
+    borderRadius: 12,
+    borderStyle: 'dashed',
   },
 });

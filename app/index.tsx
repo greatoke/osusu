@@ -1,16 +1,20 @@
 import { Image, StyleSheet, TouchableOpacity } from "react-native";
-import { Link, router } from "expo-router";
+import { Link, Redirect, router } from "expo-router";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function WelcomeScreen() {
   const colorScheme = useColorScheme();
   const tintColor = Colors[colorScheme ?? "light"].tint;
-
+  const { session } = useAuth();
+  if (session) {
+    return <Redirect href={"/(app)"} />;
+  }
   return (
     <ThemedView style={styles.container}>
       <Image

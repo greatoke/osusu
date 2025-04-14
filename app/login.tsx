@@ -1,24 +1,28 @@
 import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, TextInput, View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { Link, Redirect, useRouter } from 'expo-router';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function LoginScreen() {
   const colorScheme = useColorScheme();
   const tintColor = Colors[colorScheme ?? 'light'].tint;
   const router = useRouter();
+  const {signIn, session} = useAuth()
+
+  if (session) {
+    return <Redirect href={"/(app)"} />;
+  }
   
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('greatokedev@gmail.com');
+  const [password, setPassword] = useState('password');
 
   const handleLogin = () => {
-    // Here you would implement actual login logic
-    // For now, just navigate to the main app
-    router.replace('/(app)');
+    signIn(email, password)
   };
 
   return (
@@ -83,7 +87,7 @@ export default function LoginScreen() {
             </View>
             
             <View style={styles.signupLinkContainer}>
-              <Link href="/(auth)/signup" asChild>
+              <Link href="/signup" asChild>
                 <TouchableOpacity>
                   <ThemedText style={[styles.signupText, { color: tintColor }]}>
                     Don't have an account? Sign up

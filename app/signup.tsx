@@ -6,20 +6,21 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function SignupScreen() {
   const colorScheme = useColorScheme();
   const tintColor = Colors[colorScheme ?? 'light'].tint;
   const router = useRouter();
+  const {signUp} = useAuth()
   
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSignup = () => {
-    // Here you would implement actual signup logic
-    // For now, just navigate to the main app
-    router.replace('/(app)');
+    signUp(email, password, fullName)
+    // router.replace('/(app)');
   };
 
   return (
@@ -84,7 +85,7 @@ export default function SignupScreen() {
             </TouchableOpacity>
             
             <View style={styles.loginLinkContainer}>
-              <Link href="/(auth)/login" asChild>
+              <Link href="/login" asChild>
                 <TouchableOpacity>
                   <ThemedText style={[styles.loginText, { color: tintColor }]}>
                     Already have an account?
